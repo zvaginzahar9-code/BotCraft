@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+build/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Caches
+.cache/
+.parcel-cache/
+.eslintcache
+.vite/
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+*.local
+
+# Project scratch / screenshot harness
+tmp/
+
+# Source reference material (large dev-only assets; runtime copies live in public/)
+референсы/
+референс нового телефона/
+новые модели/
+прорисовка логотипа/
+сайл внутрь ноутбука/
+сайт внутрь телефона/
+нОВЫЙ ЗАДНИЙ ФОН/
+
+# Claude Code local settings
+.claude/
