@@ -22,16 +22,10 @@ export const progress = {
   phoneIn: 0,
   phoneScroll: 0,
   phoneOut: 0,
-  contactIn: 0,
-  contactOpen: 0,
 };
 
 // A pointer used for subtle parallax of the devices.
 export const pointer = { x: 0, y: 0 };
-
-// Registry of the scrollable inner-site elements (set by the screen components),
-// so the scroll orchestrator / rAF can translate them as their act scrubs.
-export const screens = { laptop: null, phone: null };
 
 // ---- Discrete (React-subscribed) ------------------------------------------
 let state = {

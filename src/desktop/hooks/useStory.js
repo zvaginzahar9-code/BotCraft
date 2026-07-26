@@ -30,8 +30,6 @@ export function useStory() {
       const strokes = gsap.utils.toArray('#hero-logo [data-bc-draw] path');
       const tagline = document.querySelector('#hero-tagline');
       const phoneCopy = document.querySelector('#phone-copy');
-      const contactIntro = document.querySelector('#contact-intro');
-      const lighten = document.querySelector('#scene-lighten');
       const macLeft = document.querySelector('#mac-copy-left');
       const macRight = document.querySelector('#mac-copy-right');
       const phoneStage = document.querySelector('#phone-stage');
@@ -101,7 +99,9 @@ export function useStory() {
           scrollTrigger: {
             trigger: '#act-hero',
             start: 'top top',
-            end: 'bottom bottom',
+            // Dock over the full hero height so the logo keeps moving right up to
+            // the laptop's entrance — no static gap after it lands in the nav.
+            end: 'bottom top',
             scrub: 0.6,
             invalidateOnRefresh: true,
             onRefreshInit: measure,
@@ -115,8 +115,12 @@ export function useStory() {
       /* ---------------- 3. MacBook act ------------------------------ */
       ScrollTrigger.create({
         trigger: '#act-mac',
-        start: 'top top',
-        end: 'bottom bottom',
+        // Start a touch early so the laptop rises as the hero logo finishes
+        // docking — no static gap between the intro and the first device.
+        start: 'top center',
+        // Run over the FULL act height (device exits at the act's real bottom =
+        // next act's start) so no dead 100vh tail is left between acts.
+        end: 'bottom top',
         scrub: true,
         onUpdate: (self) => {
           const p = self.progress;
@@ -140,8 +144,10 @@ export function useStory() {
       /* ---------------- 4. iPhone act ------------------------------- */
       ScrollTrigger.create({
         trigger: '#act-phone',
-        start: 'top top',
-        end: 'bottom bottom',
+        // Begin a touch early so the phone eases in while the laptop is still
+        // leaving — a crossfade handoff rather than an empty beat between them.
+        start: 'top center',
+        end: 'bottom top',
         scrub: true,
         onUpdate: (self) => {
           const p = self.progress;
@@ -153,37 +159,6 @@ export function useStory() {
           // embedded MONO phone build fades with the act
           const pv = Math.min(sub(p, 0.01, 0.14), 1) * (1 - sub(p, 0.86, 0.98));
           if (phoneStage) phoneStage.style.opacity = String(pv);
-        },
-      });
-
-      /* ---------------- 5. Pricing fly-up ---------------------------
-         Animate the whole group (cards keep their own framer transforms). */
-      gsap.to('#pricing-cards', {
-        yPercent: -22,
-        opacity: 0,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '#pricing',
-          start: 'center 42%',
-          end: 'bottom top',
-          scrub: true,
-        },
-      });
-
-      /* ---------------- 6. Contact act ------------------------------ */
-      ScrollTrigger.create({
-        trigger: '#act-contact',
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: true,
-        onUpdate: (self) => {
-          const p = self.progress;
-          progress.contactIn = sub(p, 0.0, 0.24);
-          progress.contactOpen = sub(p, 0.24, 0.5);
-          const vis = Math.min(sub(p, 0.04, 0.22), 1) * (1 - sub(p, 0.9, 1.0));
-          if (contactIntro) contactIntro.style.opacity = String(vis);
-          // background lifts as the finale settles in
-          if (lighten) lighten.style.opacity = String(sub(p, 0.1, 0.55));
         },
       });
 

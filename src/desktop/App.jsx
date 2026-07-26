@@ -10,7 +10,7 @@ import PhoneCopy from './sections/PhoneCopy.jsx';
 import PhoneStage from './sections/PhoneStage.jsx';
 import WhyUs from './sections/WhyUs.jsx';
 import Pricing from './sections/Pricing.jsx';
-import ContactIntro from './sections/ContactIntro.jsx';
+import Contacts from './sections/Contacts.jsx';
 import ScrollHint from './components/ScrollHint.jsx';
 
 // The WebGL layer is heavy — split it out of the initial bundle.
@@ -32,16 +32,12 @@ export default function App() {
         <Experience />
       </Suspense>
 
-      {/* Soft scene-lighten that fades in for the finale (driven by useStory) */}
-      <div id="scene-lighten" className="scene-lighten" aria-hidden />
-
       {/* Fixed UI overlays driven by the scroll story */}
       <SiteNav />
       <Hero />
       <MacCopy />
       <PhoneCopy />
       <PhoneStage />
-      <ContactIntro />
       <ScrollHint />
 
       {/* Scroll-length content: spacers for 3D acts + real flow sections */}
@@ -52,8 +48,7 @@ export default function App() {
 
         <WhyUs />
         <Pricing />
-
-        <section id="act-contact" className="act act--contact" aria-label="Контакты" />
+        <Contacts />
       </main>
 
       <div className="grain" aria-hidden />

@@ -17,7 +17,7 @@ export default function SiteNav() {
         <button onClick={() => scrollTo('#act-mac')}>Работа</button>
         <button onClick={() => scrollTo('#why')}>Почему мы</button>
         <button onClick={() => scrollTo('#pricing')}>Цены</button>
-        <button className="nav__cta" onClick={() => scrollTo('#act-contact')}>
+        <button className="nav__cta" onClick={() => scrollTo('#contact')}>
           Связаться
         </button>
       </nav>

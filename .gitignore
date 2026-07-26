@@ -41,6 +41,10 @@ tmp/
 # The original mobile export (dc-runtime source + uploads/screenshots, ~47MB).
 # The shipping mobile lives in public/mobile/.
 BotCraft mobl version/
+# dc-runtime source exports for the pricing / contacts screens. Runtime copies
+# live in public/pricing-*/ and public/contacts/.
+новые цены/
+конец и контакты/
 референсы/
 референс нового телефона/
 новые модели/

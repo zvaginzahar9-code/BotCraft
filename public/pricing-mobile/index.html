@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #000; color: #f4f4f5; font-family: Manrope, "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #f4f4f5; text-decoration: none; }
+  a:hover { color: oklch(0.82 0.13 155); }
+  @keyframes bcpulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+  @media (max-width: 700px) {
+    [data-m="page"] { padding-left: 16px; padding-right: 16px; padding-bottom: 96px; }
+    [data-m="h1"] { letter-spacing: -0.025em; max-width: none; }
+    [data-m="pill"] { width: 100%; justify-content: center; font-size: 14px; }
+    [data-m="btn"] { width: 100%; justify-content: center; padding-left: 18px !important; padding-right: 18px !important; }
+    [style*="30px 26px"] { padding: 24px 20px !important; }
+    [data-m="tbl"] { font-size: 14px !important; min-width: 480px !important; }
+    [data-m="tbl"] td { padding: 13px 12px !important; }
+    [data-m="tbl"] td:first-child { padding-left: 16px !important; }
+    [data-m="hint"] { display: inline !important; }
+    [data-m="bar"] { display: flex !important; }
+    [data-m="price"] { font-size: 34px !important; }
+    [style*="0 30px 80px"] { box-shadow: none !important; }
+    [style*="overflow-x:auto"] { overscroll-behavior-x: contain; }
+  }
+</style>
+</helmet>
+<div data-m="page" style="background:#000;min-height:100vh;padding:0 24px 0;">
+
+  <div data-m="bar" style="display:none;position:fixed;left:0;right:0;bottom:0;z-index:50;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:#0a0a0c;border-top:1px solid rgba(255,255,255,0.12);gap:12px;align-items:center;">
+    <div style="flex:1;min-width:0;">
+      <div style="font-size:12.5px;color:#8b8b93;line-height:1.2;">Свободных слотов: {{ slotsLeft }}</div>
+      <div style="font-size:14.5px;font-weight:700;line-height:1.3;margin-top:3px;">Цены от 120 000 ₸</div>
+    </div>
+    <a href="{{ ctaHref }}" style="flex-shrink:0;padding:13px 22px;border-radius:999px;background:#fff;color:#000;font-weight:800;font-size:14.5px;">Написать</a>
+  </div>
+
+  <div style="max-width:1180px;margin:0 auto;padding:clamp(56px,12vw,96px) 0 0;">
+
+    <div style="display:flex;align-items:center;gap:10px;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#8b8b93;font-weight:600;">
+      <span style="width:7px;height:7px;border-radius:50%;background:oklch(0.82 0.13 155);animation:bcpulse 2.4s ease-in-out infinite;"></span>
+      <span>Цены BotCraft · 2026</span>
+    </div>
+
+    <h1 data-m="h1" style="font-size:clamp(38px,6vw,86px);line-height:0.98;letter-spacing:-0.035em;font-weight:800;margin:28px 0 0;max-width:15ch;text-wrap:balance;">Сколько стоит сайт, который приносит заявки</h1>
+
+    <p style="font-size:clamp(17px,2vw,21px);line-height:1.5;color:#a1a1a8;max-width:56ch;margin:26px 0 0;text-wrap:pretty;">Ниже — полные цены без «уточним по телефону». Фиксированная цена и срок до старта работ, оплата 50/50. Вы платите один раз и получаете инструмент, который окупается первыми же клиентами.</p>
+
+    <div style="display:flex;flex-wrap:wrap;gap:12px;margin:38px 0 0;">
+      <a href="#landing" data-m="pill" style="display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:999px;background:#fff;color:#000;font-weight:700;font-size:15px;">Лендинги · от 120 000 ₸</a>
+      <a href="#sites" data-m="pill" style="display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:999px;border:1px solid rgba(255,255,255,0.14);font-weight:600;font-size:15px;color:#e4e4e7;">Сайты и магазины · от 200 000 ₸</a>
+      <a href="#bots" data-m="pill" style="display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:999px;border:1px solid rgba(255,255,255,0.14);font-weight:600;font-size:15px;color:#e4e4e7;">Боты и AI · от 180 000 ₸</a>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;margin:56px 0 0;">
+      <div style="background:#08080a;padding:26px 24px;">
+        <div style="font-size:30px;font-weight:800;letter-spacing:-0.02em;">3–5 дней</div>
+        <div style="font-size:14px;color:#8b8b93;margin-top:8px;line-height:1.45;">от брифа до запуска лендинга</div>
+      </div>
+      <div style="background:#08080a;padding:26px 24px;">
+        <div style="font-size:30px;font-weight:800;letter-spacing:-0.02em;">0 ₸</div>
+        <div style="font-size:14px;color:#8b8b93;margin-top:8px;line-height:1.45;">доплат сверх смет: цена в договоре финальная</div>
+      </div>
+      <div style="background:#08080a;padding:26px 24px;">
+        <div style="font-size:30px;font-weight:800;letter-spacing:-0.02em;">14 дней</div>
+        <div style="font-size:14px;color:#8b8b93;margin-top:8px;line-height:1.45;">бесплатных правок после сдачи</div>
+      </div>
+      <div style="background:#08080a;padding:26px 24px;">
+        <div style="font-size:30px;font-weight:800;letter-spacing:-0.02em;">50 / 50</div>
+        <div style="font-size:14px;color:#8b8b93;margin-top:8px;line-height:1.45;">половина на старте, половина при сдаче</div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:16px;justify-content:space-between;margin:20px 0 0;padding:18px 24px;border-radius:16px;background:linear-gradient(90deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.08);">
+      <div style="display:flex;align-items:center;gap:12px;font-size:15px;color:#d4d4d8;">
+        <span style="width:8px;height:8px;border-radius:50%;background:oklch(0.75 0.17 45);animation:bcpulse 1.8s ease-in-out infinite;"></span>
+        <span>Беру в работу <strong style="color:#fff;font-weight:700;">4 проекта в месяц</strong>, чтобы вести каждый лично. Свободных слотов осталось: <strong style="color:#fff;font-weight:700;">{{ slotsLeft }}</strong></span>
+      </div>
+      <a href="{{ ctaHref }}" style="font-size:14px;font-weight:700;color:oklch(0.82 0.13 155);white-space:nowrap;">Забронировать слот →</a>
+    </div>
+
+    <!-- ЛЕНДИНГИ -->
+    <div id="landing" style="padding:clamp(60px,11vw,104px) 0 0;scroll-margin-top:40px;">
+      <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;">
+        <h2 style="font-size:clamp(30px,4vw,48px);font-weight:800;letter-spacing:-0.03em;margin:0;">Лендинги</h2>
+        <span style="font-size:16px;color:#8b8b93;">одностраничные сайты под трафик и рекламу</span>
+      </div>
+      <p style="font-size:16px;line-height:1.55;color:#a1a1a8;max-width:62ch;margin:16px 0 0;text-wrap:pretty;">Нужен, когда есть один продукт и нужно продавать его здесь и сейчас. Один экран решения, один путь к заявке.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;margin:36px 0 0;align-items:start;">
+
+        <div style="background:#0c0c0e;border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:30px 26px;display:flex;flex-direction:column;gap:22px;">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="width:10px;height:10px;border-radius:50%;background:oklch(0.82 0.13 155);"></span>
+              <span style="font-size:19px;font-weight:700;">Старт</span>
+            </div>
+            <div style="font-size:14px;color:#8b8b93;margin-top:10px;line-height:1.45;">Проверить спрос и не переплатить</div>
+          </div>
+          <div>
+            <div data-m="price" style="font-size:42px;font-weight:800;letter-spacing:-0.03em;line-height:1;">120 000 ₸</div>
+            <div style="font-size:14px;color:#8b8b93;margin-top:10px;">Запуск за 3–5 дней · оплата 60 000 + 60 000</div>
+          </div>
+          <div style="height:1px;background:rgba(255,255,255,0.08);"></div>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:15px;color:#d4d4d8;line-height:1.4;">
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Готовая продающая структура</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Адаптив: моб / планшет / десктоп</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Форма заявки в Telegram / WhatsApp</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Аналитика GA4 / Метрика</span></div>
+            <div style="display:flex;gap:11px;color:#5c5c63;"><span>—</span><span>Индивидуальный дизайн</span></div>
+            <div style="display:flex;gap:11px;color:#5c5c63;"><span>—</span><span>Копирайтинг, CRM, пиксели</span></div>
+          </div>
+          <a href="{{ ctaHref }}" style="margin-top:auto;display:block;text-align:center;padding:15px;border-radius:999px;border:1px solid rgba(255,255,255,0.16);font-weight:700;font-size:15px;color:#e4e4e7;" style-hover="border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.04)">Взять «Старт»</a>
+        </div>
+
+        <div style="background:#131316;border:1px solid rgba(255,255,255,0.22);border-radius:24px;padding:30px 26px;display:flex;flex-direction:column;gap:22px;position:relative;box-shadow:0 30px 80px -40px rgba(255,255,255,0.18);">
+          <div style="position:absolute;top:-13px;left:26px;display:flex;gap:8px;">
+            <span style="background:#fff;color:#000;font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:999px;">Хит · 7 из 10</span>
+          </div>
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="width:10px;height:10px;border-radius:50%;background:oklch(0.7 0.15 255);"></span>
+              <span style="font-size:19px;font-weight:700;">Бизнес</span>
+            </div>
+            <div style="font-size:14px;color:#a1a1a8;margin-top:10px;line-height:1.45;">Лендинг, на который можно лить рекламу</div>
+          </div>
+          <div>
+            <div data-m="price" style="font-size:42px;font-weight:800;letter-spacing:-0.03em;line-height:1;">250 000 ₸</div>
+            <div style="font-size:14px;color:#a1a1a8;margin-top:10px;">Запуск за 5–7 дней · те же работы по отдельности ≈ 330 000 ₸</div>
+          </div>
+          <div style="height:1px;background:rgba(255,255,255,0.12);"></div>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:15px;color:#e4e4e7;line-height:1.4;">
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Всё из «Старта»</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Индивидуальный дизайн, не шаблон</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Копирайтинг всех блоков</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>CRM-интеграция: заявки не теряются</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Пиксели Meta и теги под рекламу</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>1 месяц сопровождения</span></div>
+          </div>
+          <a href="{{ ctaHref }}" style="margin-top:auto;display:block;text-align:center;padding:16px;border-radius:999px;background:#fff;color:#000;font-weight:800;font-size:15px;" style-hover="background:oklch(0.92 0.05 155)">Хочу «Бизнес»</a>
+          <div style="font-size:12.5px;color:#8b8b93;text-align:center;line-height:1.4;">Окупается с 1–2 клиентов в большинстве ниш</div>
+        </div>
+
+        <div style="background:#0c0c0e;border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:30px 26px;display:flex;flex-direction:column;gap:22px;">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="width:10px;height:10px;border-radius:50%;background:oklch(0.65 0.18 305);"></span>
+              <span style="font-size:19px;font-weight:700;">Премиум</span>
+            </div>
+            <div style="font-size:14px;color:#8b8b93;margin-top:10px;line-height:1.45;">Когда бюджет на рекламу больше 500 000 ₸ в месяц</div>
+          </div>
+          <div>
+            <div data-m="price" style="font-size:42px;font-weight:800;letter-spacing:-0.03em;line-height:1;">490 000 ₸</div>
+            <div style="font-size:14px;color:#8b8b93;margin-top:10px;">Запуск за 10–14 дней · 3 месяца сопровождения</div>
+          </div>
+          <div style="height:1px;background:rgba(255,255,255,0.08);"></div>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:15px;color:#d4d4d8;line-height:1.4;">
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Всё из «Бизнеса»</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Квизы и анимации: +20–40% к конверсии</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>A/B-тесты заголовков и офферов</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>3 месяца сопровождения и доработок</span></div>
+          </div>
+          <a href="{{ ctaHref }}" style="margin-top:auto;display:block;text-align:center;padding:15px;border-radius:999px;border:1px solid rgba(255,255,255,0.16);font-weight:700;font-size:15px;color:#e4e4e7;" style-hover="border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.04)">Обсудить «Премиум»</a>
+        </div>
+      </div>
+
+      <div style="margin:22px 0 0;border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;">
+        <div style="padding:20px 24px;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#8b8b93;border-bottom:1px solid rgba(255,255,255,0.08);background:#08080a;">Полное сравнение · лендинги<span data-m="hint" style="display:none;font-weight:600;letter-spacing:0;text-transform:none;color:#5c5c63;margin-left:8px;">· листайте в сторону →</span></div>
+        <div style="overflow-x:auto;">
+          <table data-m="tbl" style="width:100%;border-collapse:collapse;font-size:15px;min-width:540px;">
+            <tbody>
+              <tr>
+                <td style="padding:16px 24px;color:#8b8b93;border-bottom:1px solid rgba(255,255,255,0.06);"></td>
+                <td style="padding:16px 16px;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.06);width:150px;">Старт</td>
+                <td style="padding:16px 16px;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.06);width:150px;background:rgba(255,255,255,0.03);">Бизнес</td>
+                <td style="padding:16px 16px;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.06);width:150px;">Премиум</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Цена</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);font-weight:700;">120 000 ₸</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);font-weight:700;background:rgba(255,255,255,0.03);">250 000 ₸</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);font-weight:700;">490 000 ₸</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Срок</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#a1a1a8;">3–5 дней</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#a1a1a8;background:rgba(255,255,255,0.03);">5–7 дней</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#a1a1a8;">10–14 дней</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Продающая структура</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Адаптив под все устройства</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Форма заявки → Telegram / WhatsApp</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Базовая аналитика (GA4 / Метрика)</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Индивидуальный дизайн (не шаблон)</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Копирайтинг всех блоков</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">CRM-интеграция</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Пиксели рекламы (Meta, теги)</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Квизы / анимации</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;background:rgba(255,255,255,0.03);">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">A/B-тесты</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;background:rgba(255,255,255,0.03);">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;">Сопровождение после запуска</td>
+                <td style="padding:16px 16px;color:#5c5c63;">—</td>
+                <td style="padding:16px 16px;color:#a1a1a8;background:rgba(255,255,255,0.03);">1 месяц</td>
+                <td style="padding:16px 16px;color:#a1a1a8;">3 месяца</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- САЙТЫ -->
+    <div id="sites" style="padding:clamp(60px,11vw,104px) 0 0;scroll-margin-top:40px;">
+      <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;">
+        <h2 style="font-size:clamp(30px,4vw,48px);font-weight:800;letter-spacing:-0.03em;margin:0;">Сайты и магазины</h2>
+        <span style="font-size:16px;color:#8b8b93;">многостраничные сайты, каталоги, интернет-магазины</span>
+      </div>
+      <p style="font-size:16px;line-height:1.55;color:#a1a1a8;max-width:62ch;margin:16px 0 0;text-wrap:pretty;">Нужен, когда услуг или товаров много, важен поиск в Google и клиент должен сам покупать без вашего участия.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;margin:36px 0 0;align-items:start;">
+
+        <div style="background:#0c0c0e;border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:30px 26px;display:flex;flex-direction:column;gap:22px;">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="width:10px;height:10px;border-radius:50%;background:oklch(0.82 0.13 155);"></span>
+              <span style="font-size:19px;font-weight:700;">Визитка</span>
+            </div>
+            <div style="font-size:14px;color:#8b8b93;margin-top:10px;line-height:1.45;">Компания должна выглядеть солидно</div>
+          </div>
+          <div>
+            <div data-m="price" style="font-size:42px;font-weight:800;letter-spacing:-0.03em;line-height:1;">200 000 ₸</div>
+            <div style="font-size:14px;color:#8b8b93;margin-top:10px;">5–7 дней · до 5 страниц</div>
+          </div>
+          <div style="height:1px;background:rgba(255,255,255,0.08);"></div>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:15px;color:#d4d4d8;line-height:1.4;">
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Индивидуальный дизайн</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Адаптив под все экраны</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>SEO-база под Google</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>1 месяц сопровождения</span></div>
+            <div style="display:flex;gap:11px;color:#5c5c63;"><span>—</span><span>Админ-панель и CRM</span></div>
+          </div>
+          <a href="{{ ctaHref }}" style="margin-top:auto;display:block;text-align:center;padding:15px;border-radius:999px;border:1px solid rgba(255,255,255,0.16);font-weight:700;font-size:15px;color:#e4e4e7;" style-hover="border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.04)">Взять «Визитку»</a>
+        </div>
+
+        <div style="background:#131316;border:1px solid rgba(255,255,255,0.22);border-radius:24px;padding:30px 26px;display:flex;flex-direction:column;gap:22px;position:relative;box-shadow:0 30px 80px -40px rgba(255,255,255,0.18);">
+          <div style="position:absolute;top:-13px;left:26px;">
+            <span style="background:#fff;color:#000;font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:999px;">Хит</span>
+          </div>
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="width:10px;height:10px;border-radius:50%;background:oklch(0.7 0.15 255);"></span>
+              <span style="font-size:19px;font-weight:700;">Корпоративный</span>
+            </div>
+            <div style="font-size:14px;color:#a1a1a8;margin-top:10px;line-height:1.45;">Сайт, который вы меняете сами, без программиста</div>
+          </div>
+          <div>
+            <div data-m="price" style="font-size:42px;font-weight:800;letter-spacing:-0.03em;line-height:1;">450 000 ₸</div>
+            <div style="font-size:14px;color:#a1a1a8;margin-top:10px;">2 недели · до 12 страниц · дешевле, чем 6 месяцев правок «по заявке»</div>
+          </div>
+          <div style="height:1px;background:rgba(255,255,255,0.12);"></div>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:15px;color:#e4e4e7;line-height:1.4;">
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Всё из «Визитки»</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Админ-панель: меняете контент сами</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>CRM-интеграция</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Структура под SEO-трафик</span></div>
+          </div>
+          <a href="{{ ctaHref }}" style="margin-top:auto;display:block;text-align:center;padding:16px;border-radius:999px;background:#fff;color:#000;font-weight:800;font-size:15px;" style-hover="background:oklch(0.92 0.05 155)">Хочу «Корпоративный»</a>
+          <div style="font-size:12.5px;color:#8b8b93;text-align:center;line-height:1.4;">Самый частый выбор среди компаний с 5+ услугами</div>
+        </div>
+
+        <div style="background:#0c0c0e;border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:30px 26px;display:flex;flex-direction:column;gap:22px;">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="width:10px;height:10px;border-radius:50%;background:oklch(0.65 0.18 305);"></span>
+              <span style="font-size:19px;font-weight:700;">Магазин</span>
+            </div>
+            <div style="font-size:14px;color:#8b8b93;margin-top:10px;line-height:1.45;">Продажи 24/7 без менеджера в переписке</div>
+          </div>
+          <div>
+            <div data-m="price" style="font-size:42px;font-weight:800;letter-spacing:-0.03em;line-height:1;">750 000 ₸</div>
+            <div style="font-size:14px;color:#8b8b93;margin-top:10px;">3–4 недели · каталог + карточки товаров</div>
+          </div>
+          <div style="height:1px;background:rgba(255,255,255,0.08);"></div>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:15px;color:#d4d4d8;line-height:1.4;">
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Всё из «Корпоративного»</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Каталог товаров + фильтры</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Корзина и онлайн-оплата (Kaspi)</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>2 месяца сопровождения</span></div>
+          </div>
+          <a href="{{ ctaHref }}" style="margin-top:auto;display:block;text-align:center;padding:15px;border-radius:999px;border:1px solid rgba(255,255,255,0.16);font-weight:700;font-size:15px;color:#e4e4e7;" style-hover="border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.04)">Обсудить магазин</a>
+        </div>
+      </div>
+
+      <div style="margin:22px 0 0;border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;">
+        <div style="padding:20px 24px;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#8b8b93;border-bottom:1px solid rgba(255,255,255,0.08);background:#08080a;">Полное сравнение · сайты<span data-m="hint" style="display:none;font-weight:600;letter-spacing:0;text-transform:none;color:#5c5c63;margin-left:8px;">· листайте в сторону →</span></div>
+        <div style="overflow-x:auto;">
+          <table data-m="tbl" style="width:100%;border-collapse:collapse;font-size:15px;min-width:540px;">
+            <tbody>
+              <tr>
+                <td style="padding:16px 24px;border-bottom:1px solid rgba(255,255,255,0.06);"></td>
+                <td style="padding:16px 16px;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.06);width:150px;">Визитка</td>
+                <td style="padding:16px 16px;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.06);width:150px;background:rgba(255,255,255,0.03);">Корпоративный</td>
+                <td style="padding:16px 16px;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.06);width:150px;">Магазин</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Цена</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);font-weight:700;">200 000 ₸</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);font-weight:700;background:rgba(255,255,255,0.03);">450 000 ₸</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);font-weight:700;">750 000 ₸</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Срок</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#a1a1a8;">5–7 дней</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#a1a1a8;background:rgba(255,255,255,0.03);">2 недели</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#a1a1a8;">3–4 недели</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Количество страниц</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#a1a1a8;">до 5</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#a1a1a8;background:rgba(255,255,255,0.03);">до 12</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#a1a1a8;">каталог + карточки</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Индивидуальный дизайн</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Адаптив</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Админ-панель (менять контент самому)</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Каталог товаров + фильтры</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;background:rgba(255,255,255,0.03);">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Корзина + онлайн-оплата (Kaspi)</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;background:rgba(255,255,255,0.03);">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">CRM-интеграция</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">SEO-база</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;">Сопровождение</td>
+                <td style="padding:16px 16px;color:#a1a1a8;">1 месяц</td>
+                <td style="padding:16px 16px;color:#a1a1a8;background:rgba(255,255,255,0.03);">1 месяц</td>
+                <td style="padding:16px 16px;color:#a1a1a8;">2 месяца</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- БОТЫ -->
+    <div id="bots" style="padding:clamp(60px,11vw,104px) 0 0;scroll-margin-top:40px;">
+      <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;">
+        <h2 style="font-size:clamp(30px,4vw,48px);font-weight:800;letter-spacing:-0.03em;margin:0;">Боты и AI</h2>
+        <span style="font-size:16px;color:#8b8b93;">Telegram и WhatsApp: приём заявок и продажи в переписке</span>
+      </div>
+      <p style="font-size:16px;line-height:1.55;color:#a1a1a8;max-width:62ch;margin:16px 0 0;text-wrap:pretty;">Бот отвечает мгновенно и ночью. Один менеджер на зарплате в 250 000 ₸ обходится дороже за первый же месяц — и уходит в отпуск.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;margin:36px 0 0;align-items:start;">
+
+        <div style="background:#0c0c0e;border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:30px 26px;display:flex;flex-direction:column;gap:22px;">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="width:10px;height:10px;border-radius:50%;background:oklch(0.82 0.13 155);"></span>
+              <span style="font-size:19px;font-weight:700;">Простой</span>
+            </div>
+            <div style="font-size:14px;color:#8b8b93;margin-top:10px;line-height:1.45;">Снять с себя однотипные вопросы</div>
+          </div>
+          <div>
+            <div data-m="price" style="font-size:42px;font-weight:800;letter-spacing:-0.03em;line-height:1;">180 000 ₸</div>
+            <div style="font-size:14px;color:#8b8b93;margin-top:10px;">5–7 дней · 2 недели сопровождения</div>
+          </div>
+          <div style="height:1px;background:rgba(255,255,255,0.08);"></div>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:15px;color:#d4d4d8;line-height:1.4;">
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>FAQ и автоответы</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Приём заявок в чат / на почту</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Инлайн-кнопки, меню, сценарии</span></div>
+            <div style="display:flex;gap:11px;color:#5c5c63;"><span>—</span><span>Админ-панель, каталог, CRM</span></div>
+          </div>
+          <a href="{{ ctaHref }}" style="margin-top:auto;display:block;text-align:center;padding:15px;border-radius:999px;border:1px solid rgba(255,255,255,0.16);font-weight:700;font-size:15px;color:#e4e4e7;" style-hover="border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.04)">Взять «Простой»</a>
+        </div>
+
+        <div style="background:#131316;border:1px solid rgba(255,255,255,0.22);border-radius:24px;padding:30px 26px;display:flex;flex-direction:column;gap:22px;position:relative;box-shadow:0 30px 80px -40px rgba(255,255,255,0.18);">
+          <div style="position:absolute;top:-13px;left:26px;">
+            <span style="background:#fff;color:#000;font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:999px;">Хит</span>
+          </div>
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="width:10px;height:10px;border-radius:50%;background:oklch(0.7 0.15 255);"></span>
+              <span style="font-size:19px;font-weight:700;">Бизнес-бот</span>
+            </div>
+            <div style="font-size:14px;color:#a1a1a8;margin-top:10px;line-height:1.45;">Бот, который принимает деньги, а не только вопросы</div>
+          </div>
+          <div>
+            <div data-m="price" style="font-size:42px;font-weight:800;letter-spacing:-0.03em;line-height:1;">400 000 ₸</div>
+            <div style="font-size:14px;color:#a1a1a8;margin-top:10px;">2 недели · оплата через Kaspi внутри бота</div>
+          </div>
+          <div style="height:1px;background:rgba(255,255,255,0.12);"></div>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:15px;color:#e4e4e7;line-height:1.4;">
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Всё из «Простого»</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Админ-панель</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Каталог и карточки товаров</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>CRM: amoCRM, Bitrix24, 1C</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Оплата через Kaspi</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>1 месяц сопровождения</span></div>
+          </div>
+          <a href="{{ ctaHref }}" style="margin-top:auto;display:block;text-align:center;padding:16px;border-radius:999px;background:#fff;color:#000;font-weight:800;font-size:15px;" style-hover="background:oklch(0.92 0.05 155)">Хочу «Бизнес-бота»</a>
+          <div style="font-size:12.5px;color:#8b8b93;text-align:center;line-height:1.4;">Дешевле одного менеджера за 2 месяца работы</div>
+        </div>
+
+        <div style="background:#0c0c0e;border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:30px 26px;display:flex;flex-direction:column;gap:22px;">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="width:10px;height:10px;border-radius:50%;background:oklch(0.65 0.18 305);"></span>
+              <span style="font-size:19px;font-weight:700;">AI-ассистент</span>
+            </div>
+            <div style="font-size:14px;color:#8b8b93;margin-top:10px;line-height:1.45;">Отвечает как живой человек, обучен на ваших данных</div>
+          </div>
+          <div>
+            <div data-m="price" style="font-size:42px;font-weight:800;letter-spacing:-0.03em;line-height:1;">750 000 ₸</div>
+            <div style="font-size:14px;color:#8b8b93;margin-top:10px;">3–4 недели · 2 месяца сопровождения</div>
+          </div>
+          <div style="height:1px;background:rgba(255,255,255,0.08);"></div>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:15px;color:#d4d4d8;line-height:1.4;">
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Всё из «Бизнес-бота»</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>AI-ответы на ваших данных</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Понимает свободный текст, а не только кнопки</span></div>
+            <div style="display:flex;gap:11px;"><span style="color:oklch(0.82 0.13 155);font-weight:700;">✓</span><span>Работает 24/7 без выходных</span></div>
+          </div>
+          <a href="{{ ctaHref }}" style="margin-top:auto;display:block;text-align:center;padding:15px;border-radius:999px;border:1px solid rgba(255,255,255,0.16);font-weight:700;font-size:15px;color:#e4e4e7;" style-hover="border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.04)">Обсудить AI-ассистента</a>
+        </div>
+      </div>
+
+      <div style="margin:22px 0 0;border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;">
+        <div style="padding:20px 24px;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#8b8b93;border-bottom:1px solid rgba(255,255,255,0.08);background:#08080a;">Полное сравнение · боты<span data-m="hint" style="display:none;font-weight:600;letter-spacing:0;text-transform:none;color:#5c5c63;margin-left:8px;">· листайте в сторону →</span></div>
+        <div style="overflow-x:auto;">
+          <table data-m="tbl" style="width:100%;border-collapse:collapse;font-size:15px;min-width:540px;">
+            <tbody>
+              <tr>
+                <td style="padding:16px 24px;border-bottom:1px solid rgba(255,255,255,0.06);"></td>
+                <td style="padding:16px 16px;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.06);width:150px;">Простой</td>
+                <td style="padding:16px 16px;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.06);width:150px;background:rgba(255,255,255,0.03);">Бизнес-бот</td>
+                <td style="padding:16px 16px;font-weight:700;border-bottom:1px solid rgba(255,255,255,0.06);width:150px;">AI-ассистент</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Цена</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);font-weight:700;">180 000 ₸</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);font-weight:700;background:rgba(255,255,255,0.03);">400 000 ₸</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);font-weight:700;">750 000 ₸</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Срок</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#a1a1a8;">5–7 дней</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#a1a1a8;background:rgba(255,255,255,0.03);">2 недели</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#a1a1a8;">3–4 недели</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">FAQ + автоответы</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Приём заявок в чат / почту</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Инлайн-кнопки, меню, сценарии</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Админ-панель</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Каталог / карточки товаров</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">CRM (amoCRM, Bitrix24, 1C)</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Оплата через Kaspi</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;background:rgba(255,255,255,0.03);">✓</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">AI-ответы (обучен на ваших данных)</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;background:rgba(255,255,255,0.03);">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;border-bottom:1px solid rgba(255,255,255,0.06);">Понимает свободный текст</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#5c5c63;background:rgba(255,255,255,0.03);">—</td>
+                <td style="padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:oklch(0.82 0.13 155);font-weight:700;">✓</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 24px;color:#d4d4d8;">Сопровождение</td>
+                <td style="padding:16px 16px;color:#a1a1a8;">2 недели</td>
+                <td style="padding:16px 16px;color:#a1a1a8;background:rgba(255,255,255,0.03);">1 месяц</td>
+                <td style="padding:16px 16px;color:#a1a1a8;">2 месяца</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ЧТО ВХОДИТ ВСЕГДА -->
+    <div style="padding:clamp(60px,11vw,104px) 0 0;">
+      <h2 style="font-size:clamp(26px,3.4vw,40px);font-weight:800;letter-spacing:-0.03em;margin:0;">Входит в любой тариф — и не стоит вам ни тенге сверху</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin:32px 0 0;">
+        <div style="background:#0c0c0e;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:26px 24px;">
+          <div style="font-size:17px;font-weight:700;">Цена не растёт в процессе</div>
+          <div style="font-size:14.5px;color:#8b8b93;line-height:1.5;margin-top:10px;">Объём работ фиксируем до старта. Всё, что в него не входит, обсуждаем заранее, а не по факту.</div>
+        </div>
+        <div style="background:#0c0c0e;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:26px 24px;">
+          <div style="font-size:17px;font-weight:700;">14 дней правок бесплатно</div>
+          <div style="font-size:14.5px;color:#8b8b93;line-height:1.5;margin-top:10px;">После сдачи правим тексты, блоки и мелочи без доплат и без «это уже другая работа».</div>
+        </div>
+        <div style="background:#0c0c0e;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:26px 24px;">
+          <div style="font-size:17px;font-weight:700;">Всё оформлено на вас</div>
+          <div style="font-size:14.5px;color:#8b8b93;line-height:1.5;margin-top:10px;">Домен, хостинг, доступы, бот — на ваших аккаунтах. Вы не зависите от подрядчика.</div>
+        </div>
+        <div style="background:#0c0c0e;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:26px 24px;">
+          <div style="font-size:17px;font-weight:700;">Скорость, которую видно</div>
+          <div style="font-size:14.5px;color:#8b8b93;line-height:1.5;margin-top:10px;">Сайты грузятся быстро на мобильном интернете — иначе половина рекламного бюджета уходит в пустоту.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ЧТО ВЫБРАТЬ -->
+    <div style="padding:clamp(56px,10vw,88px) 0 0;">
+      <h2 style="font-size:clamp(26px,3.4vw,40px);font-weight:800;letter-spacing:-0.03em;margin:0;">Не знаете, что брать? Короткая подсказка</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;margin:32px 0 0;">
+        <div style="background:#08080a;padding:28px 24px;">
+          <div style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:#8b8b93;font-weight:700;">Если у вас</div>
+          <div style="font-size:18px;font-weight:700;margin-top:12px;line-height:1.35;">Один продукт и реклама</div>
+          <div style="font-size:14.5px;color:#a1a1a8;line-height:1.5;margin-top:10px;">Берите <strong style="color:#fff;">Лендинг «Бизнес»</strong>. «Старт» без индивидуального дизайна и пикселей на платном трафике выгорает быстрее.</div>
+        </div>
+        <div style="background:#08080a;padding:28px 24px;">
+          <div style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:#8b8b93;font-weight:700;">Если у вас</div>
+          <div style="font-size:18px;font-weight:700;margin-top:12px;line-height:1.35;">Много услуг и планы на Google</div>
+          <div style="font-size:14.5px;color:#a1a1a8;line-height:1.5;margin-top:10px;">Берите <strong style="color:#fff;">Корпоративный</strong>. Админ-панель окупается на второй же партии правок.</div>
+        </div>
+        <div style="background:#08080a;padding:28px 24px;">
+          <div style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:#8b8b93;font-weight:700;">Если у вас</div>
+          <div style="font-size:18px;font-weight:700;margin-top:12px;line-height:1.35;">Заявки тонут в переписке</div>
+          <div style="font-size:14.5px;color:#a1a1a8;line-height:1.5;margin-top:10px;">Берите <strong style="color:#fff;">Бизнес-бота</strong>. Он отвечает за 2 секунды в 3 часа ночи — менеджер не отвечает.</div>
+        </div>
+      </div>
+      <p style="font-size:15px;color:#8b8b93;margin:20px 0 0;">Сайт + бот в одном проекте — считаем со скидкой. Напишите, посчитаю связку под вашу задачу.</p>
+    </div>
+
+    <!-- FAQ -->
+    <div style="padding:clamp(56px,10vw,88px) 0 0;">
+      <h2 style="font-size:clamp(26px,3.4vw,40px);font-weight:800;letter-spacing:-0.03em;margin:0;">Вопросы, которые задают перед оплатой</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;margin:32px 0 0;">
+        <div style="background:#0c0c0e;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:26px 24px;">
+          <div style="font-size:17px;font-weight:700;line-height:1.35;">«Дорого. Мне на фрилансе сделают за 40 000»</div>
+          <div style="font-size:14.5px;color:#a1a1a8;line-height:1.55;margin-top:12px;text-wrap:pretty;">Сделают. Обычно это шаблон без структуры, аналитики и CRM — и потом вы платите второй раз, чтобы всё переделать. Здесь вы платите один раз за сайт, который считает заявки.</div>
+        </div>
+        <div style="background:#0c0c0e;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:26px 24px;">
+          <div style="font-size:17px;font-weight:700;line-height:1.35;">А если результат мне не понравится?</div>
+          <div style="font-size:14.5px;color:#a1a1a8;line-height:1.55;margin-top:12px;text-wrap:pretty;">Сначала согласовываем дизайн, только потом верстаю. Вы видите проект до того, как он готов, и вносите правки на этапе макета — бесплатно.</div>
+        </div>
+        <div style="background:#0c0c0e;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:26px 24px;">
+          <div style="font-size:17px;font-weight:700;line-height:1.35;">Можно платить частями?</div>
+          <div style="font-size:14.5px;color:#a1a1a8;line-height:1.55;margin-top:12px;text-wrap:pretty;">Да: 50% на старте, 50% при сдаче. По проектам от 450 000 ₸ разбиваем на 3 платежа по этапам.</div>
+        </div>
+        <div style="background:#0c0c0e;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:26px 24px;">
+          <div style="font-size:17px;font-weight:700;line-height:1.35;">Что нужно от меня?</div>
+          <div style="font-size:14.5px;color:#a1a1a8;line-height:1.55;margin-top:12px;text-wrap:pretty;">30 минут на созвон и материалы: логотип, фото, прайс. Тексты пишу сам в тарифах от «Бизнеса».</div>
+        </div>
+        <div style="background:#0c0c0e;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:26px 24px;">
+          <div style="font-size:17px;font-weight:700;line-height:1.35;">Сроки реально такие?</div>
+          <div style="font-size:14.5px;color:#a1a1a8;line-height:1.55;margin-top:12px;text-wrap:pretty;">Да, если материалы приходят вовремя. Срок фиксируем заранее и считаем от дня получения контента, а не от предоплаты.</div>
+        </div>
+        <div style="background:#0c0c0e;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:26px 24px;">
+          <div style="font-size:17px;font-weight:700;line-height:1.35;">Что будет после сдачи?</div>
+          <div style="font-size:14.5px;color:#a1a1a8;line-height:1.55;margin-top:12px;text-wrap:pretty;">14 дней правок бесплатно плюс сопровождение по тарифу. Дальше — поддержка от 30 000 ₸ в месяц, по желанию.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;slotsLeft&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:2,&quot;min&quot;:0,&quot;max&quot;:10,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Дефицит&quot;},&quot;ctaHref&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://wa.me/77072911123&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Ссылки&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      slotsLeft: this.props.slotsLeft ?? 2,
+      ctaHref: this.props.ctaHref ?? "https://wa.me/77072911123"
+    };
+  }
+}
+</script>
+</body>
+</html>

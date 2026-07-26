@@ -12,6 +12,7 @@ export default function Background() {
 
   useEffect(() => {
     let raf;
+    let last = -1;
     const tick = () => {
       // Drive the background straight from Lenis' (already-smoothed) scroll
       // progress. It advances only while scrolling and holds an exact value when
@@ -25,8 +26,13 @@ export default function Background() {
         const max = document.documentElement.scrollHeight - window.innerHeight;
         progress = max > 0 ? window.scrollY / max : 0;
       }
-      const win = frameRef.current && frameRef.current.contentWindow;
-      if (win && win.__setBgProgress) win.__setBgProgress(progress);
+      // Only push into the background iframe when the value actually changed, so
+      // it idles (no redundant redraws) whenever the user isn't scrolling.
+      if (progress !== last) {
+        last = progress;
+        const win = frameRef.current && frameRef.current.contentWindow;
+        if (win && win.__setBgProgress) win.__setBgProgress(progress);
+      }
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
