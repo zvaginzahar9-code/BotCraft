@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<script type="importmap">
+{ "imports": {
+  "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+} }
+</script>
+<style>
+  html, body { margin:0; padding:0; background:transparent; overflow:hidden; }
+</style>
+</helmet>
+<div ref="{{ rootRef }}" style="position:fixed; inset:0; width:100vw; height:100vh; background:transparent; overflow:hidden;">
+  <canvas ref="{{ canvasRef }}" style="position:absolute; inset:0; width:100%; height:100%; display:block; z-index:1; cursor:grab;"></canvas>
+  <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:3; pointer-events:none; opacity:{{ loaderOpacity }}; transition:opacity .7s ease;">
+    <div style="font-family:'Space Mono', ui-monospace, monospace; font-size:12px; letter-spacing:0.35em; color:#7a776f; text-transform:uppercase;">Loading</div>
+  </div>
+  <div style="display:none; position:absolute; bottom:22px; left:0; right:0; text-align:center; z-index:3; pointer-events:none; opacity:{{ hintOpacity }}; transition:opacity .6s ease; font-family:ui-monospace, monospace; font-size:11px; letter-spacing:0.28em; color:#6f6c64; text-transform:uppercase;">Drag the frame to rotate · Scroll inside the screen</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
+class Component extends DCLogic {
+  state = { loaderOpacity: 1, hintOpacity: 0 };
+
+  renderVals() {
+    return {
+      loaderOpacity: this.state.loaderOpacity,
+      hintOpacity: this.state.hintOpacity,
+      canvasRef: (el) => { this.canvas = el; },
+      rootRef: (el) => { this.root = el; },
+    };
+  }
+
+  componentDidMount() { this.init(); }
+
+  componentWillUnmount() {
+    if (this.renderer) this.renderer.setAnimationLoop(null);
+    if (this.controls) this.controls.dispose();
+    window.removeEventListener('resize', this.onResize);
+  }
+
+  async init() {
+    const THREE = await import('three');
+    const { FBXLoader } = await import('three/addons/loaders/FBXLoader.js');
+    const { RoomEnvironment } = await import('three/addons/environments/RoomEnvironment.js');
+    const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
+    const { CSS3DRenderer, CSS3DObject } = await import('three/addons/renderers/CSS3DRenderer.js');
+    this.THREE = THREE;
+    this.CSS3DObject = CSS3DObject;
+
+    const renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setSize(innerWidth, innerHeight, false);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.18;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    this.renderer = renderer;
+
+    // CSS3D layer for the live website, on top of the canvas
+    const cssRenderer = new CSS3DRenderer();
+    cssRenderer.setSize(innerWidth, innerHeight);
+    const cd = cssRenderer.domElement;
+    cd.style.position = 'absolute';
+    cd.style.top = '0';
+    cd.style.left = '0';
+    cd.style.zIndex = '2';
+    cd.style.pointerEvents = 'none';
+    this.root.appendChild(cd);
+    this.cssRenderer = cssRenderer;
+
+    const scene = new THREE.Scene();
+    this.scene = scene;
+    const cssScene = new THREE.Scene();
+    this.cssScene = cssScene;
+
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.02).texture;
+    scene.environmentIntensity = 1.4;
+
+    const camera = new THREE.PerspectiveCamera(30, innerWidth / innerHeight, 0.1, 100);
+    camera.position.set(0, 0, 6.4);
+    this.camera = camera;
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+    const key = new THREE.DirectionalLight(0xffffff, 3.0); key.position.set(2.5, 4, 5); scene.add(key);
+    const fill = new THREE.DirectionalLight(0xfff2e0, 1.4); fill.position.set(4, -2, 3); scene.add(fill);
+    const rim = new THREE.DirectionalLight(0xbcd0ff, 2.4); rim.position.set(-4, 2, -3); scene.add(rim);
+
+    const controls = new OrbitControls(camera, this.canvas);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.enablePan = false;
+    controls.enableZoom = true;
+    controls.minDistance = 4.6;
+    controls.maxDistance = 8;
+    controls.rotateSpeed = 0.55;
+    controls.minAzimuthAngle = -0.42;
+    controls.maxAzimuthAngle = 0.42;
+    controls.minPolarAngle = Math.PI / 2 - 0.34;
+    controls.maxPolarAngle = Math.PI / 2 + 0.34;
+    this.controls = controls;
+
+    const rig = new THREE.Group(); scene.add(rig);
+    this.rig = rig;
+
+    this.onResize = () => {
+      renderer.setSize(innerWidth, innerHeight, false);
+      cssRenderer.setSize(innerWidth, innerHeight);
+      camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+    };
+    window.addEventListener('resize', this.onResize);
+
+    new FBXLoader().load('assets/phone.fbx', (obj) => this.setupModel(obj), undefined,
+      (e) => console.error('FBX load error', e));
+
+    renderer.setAnimationLoop(() => this.frame());
+  }
+
+  setupModel(obj) {
+    const THREE = this.THREE;
+    const titanium = new THREE.MeshStandardMaterial({ color: 0xbdb7ac, metalness: 1.0, roughness: 0.38, envMapIntensity: 1.7 });
+    // the glass panel — hide it so the live iframe shows through the frame
+    let display = null;
+    obj.traverse((n) => {
+      if (!n.isMesh) return;
+      if (n.name === 'main_body001') { display = n; n.visible = false; }
+      else n.material = titanium;
+    });
+
+    const box = new THREE.Box3().setFromObject(obj);
+    const size = new THREE.Vector3(); box.getSize(size);
+    const center = new THREE.Vector3(); box.getCenter(center);
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const s = 2.6 / maxDim;
+    obj.scale.setScalar(s);
+    obj.position.sub(center.multiplyScalar(s));
+    obj.updateWorldMatrix(true, true);
+    this.rig.add(obj);
+    this.model = obj;
+
+    // measure the glass panel in world space to place the iframe exactly on it
+    const dbox = new THREE.Box3().setFromObject(display || obj);
+    const dsize = new THREE.Vector3(); dbox.getSize(dsize);
+    const dcenter = new THREE.Vector3(); dbox.getCenter(dcenter);
+    const w = dsize.x, h = dsize.y;
+    const aspect = h / w;
+
+    // the live website, at its true mobile proportions
+    const iframeW = 390;
+    const iframeH = Math.round(iframeW * aspect);
+    const wrap = document.createElement('div');
+    wrap.style.cssText = `width:${iframeW}px; height:${iframeH}px; overflow:hidden; border-radius:${Math.round(iframeW * 0.075)}px; background:#f2f0ec; box-shadow:0 0 0 1px rgba(0,0,0,0.25); -webkit-mask-image:-webkit-radial-gradient(#fff,#000);`;
+    const iframe = document.createElement('iframe');
+    iframe.src = 'assets/site.html';
+    iframe.setAttribute('scrolling', 'yes');
+    iframe.style.cssText = 'width:100%; height:100%; border:0; display:block; background:#f2f0ec; pointer-events:auto;';
+    wrap.appendChild(iframe);
+    this.iframe = iframe;
+
+    const cssObj = new this.CSS3DObject(wrap);
+    const worldPerPx = w / iframeW;
+    cssObj.scale.setScalar(worldPerPx);
+    this.cssObj = cssObj;
+    this.cssScene.add(cssObj);
+
+    // anchor that lives in the rig, sitting on the glass, so it inherits idle motion
+    const anchor = new THREE.Object3D();
+    anchor.position.set(dcenter.x, dcenter.y, dbox.max.z + 0.006);
+    this.rig.add(anchor);
+    this.anchor = anchor;
+    this._worldPerPx = worldPerPx;
+
+    iframe.addEventListener('load', () => setTimeout(() => {
+      this.setState({ loaderOpacity: 0, hintOpacity: 1 });
+      setTimeout(() => this.setState({ hintOpacity: 0 }), 5000);
+    }, 400));
+    setTimeout(() => this.setState({ loaderOpacity: 0 }), 6000);
+  }
+
+  frame() {
+    const time = performance.now();
+    if (this.rig) {
+      this.rig.position.y = Math.sin(time / 2400) * 0.05;
+      this.rig.rotation.z = Math.sin(time / 3200) * 0.012;
+    }
+    if (this.controls) this.controls.update();
+    if (this.anchor && this.cssObj) {
+      this.anchor.updateWorldMatrix(true, false);
+      const THREE = this.THREE;
+      const pos = new THREE.Vector3(), quat = new THREE.Quaternion(), scl = new THREE.Vector3();
+      this.anchor.matrixWorld.decompose(pos, quat, scl);
+      this.cssObj.position.copy(pos);
+      this.cssObj.quaternion.copy(quat);
+      this.cssObj.scale.setScalar(this._worldPerPx * scl.x);
+    }
+    this.renderer.render(this.scene, this.camera);
+    if (this.cssRenderer) this.cssRenderer.render(this.cssScene, this.camera);
+  }
+}
+</script>
+</body>
+</html>

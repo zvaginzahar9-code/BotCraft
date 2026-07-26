@@ -1,0 +1,26 @@
+/* The embedded MONO phone build, on the right of the phone act. */
+.phone-stage {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 60vw;
+  height: 100vh;
+  z-index: 6; /* above the transparent WebGL canvas, below nav/overlays */
+  opacity: 0; /* driven by useStory (phone act) */
+  pointer-events: none; /* page keeps scrolling; inner site is scroll-driven */
+  will-change: opacity;
+}
+.phone-stage__frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: transparent;
+}
+@media (max-width: 768px) {
+  .phone-stage {
+    width: 100vw;
+    height: 66vh; /* keep the phone in the upper area; copy sits clear below */
+    top: 0;
+  }
+}

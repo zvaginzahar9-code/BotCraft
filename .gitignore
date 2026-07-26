@@ -38,6 +38,9 @@ Thumbs.db
 tmp/
 
 # Source reference material (large dev-only assets; runtime copies live in public/)
+# The original mobile export (dc-runtime source + uploads/screenshots, ~47MB).
+# The shipping mobile lives in public/mobile/.
+BotCraft mobl version/
 референсы/
 референс нового телефона/
 новые модели/
