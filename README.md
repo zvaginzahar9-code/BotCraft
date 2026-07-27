@@ -110,3 +110,45 @@ canvas; its animation is driven by `window.__lenis.progress`, so it advances onl
 The logo draw-on is ported from the provided animation (`Logo.jsx` + `useStory`): the real
 `assets/logo.svg` paths are stroked via `stroke-dashoffset`, then flooded white; the bounding rectangle
 is stripped and the fill is transparent (fill-rule) so no box appears over the background.
+
+## Security headers (Vercel)
+
+`vercel.json` sets the headers on every response; JSON can't carry comments, so the reasoning lives
+here. Any change to it must be re-verified with `npm run verify:csp` (see below) — CSP breakage is
+silent in the build and only shows up in the browser.
+
+Baseline on `/(.*)`: `Strict-Transport-Security` (2y, `includeSubDomains`, `preload`), `nosniff`,
+`X-Frame-Options: SAMEORIGIN`, `Referrer-Policy: strict-origin-when-cross-origin`,
+`Permissions-Policy` (everything off except `accelerometer`/`gyroscope`/`fullscreen`/`autoplay`, which
+stay `self` because the mobile iframe declares `allow="accelerometer; gyroscope; fullscreen"` and a
+child can never be granted more than the top document holds), and
+`Cross-Origin-Opener-Policy: same-origin-allow-popups` (keeps `target="_blank"` links to t.me / wa.me
+working). No `Access-Control-Allow-Origin` — nothing here is a cross-origin API.
+
+`X-Frame-Options` is **SAMEORIGIN, not DENY**: the scene frames its own pages (`/embeds`, `/contacts`,
+`/pricing-*`, `/mono-phone`) and the shell frames `/mobile`. `DENY` would blank every device screen.
+
+CSP is set in three tiers, on non-overlapping `source` patterns — two CSP headers on one response are
+enforced as an *intersection*, so the tiers must never both match a path:
+
+| Tier | Paths | Why it differs |
+| --- | --- | --- |
+| App | everything else | `script-src 'self' 'wasm-unsafe-eval'` — React/R3F/GSAP/Lenis need no `eval`; three.js compiles a WASM module. `connect-src`/`img-src` allow `blob:` because GLTFLoader fetches textures it extracts from `laptop-new.glb` through blob URLs. `style-src 'unsafe-inline'` for React/`<Html>` inline styles. |
+| Background | `/embeds/*` | Self-contained page: one inline `<style>`, one inline `<script>`. No CDN, no eval. |
+| dc-runtime pages | `/mobile/*`, `/contacts/*`, `/pricing-*/*`, `/mono-phone/*` | `support.js` compiles components with `new Function()` and loads React/ReactDOM/Babel (and three, via importmap) from unpkg with SRI, plus Google Fonts. `'unsafe-eval'` + `https://unpkg.com` are load-bearing — without them these pages render nothing. |
+
+Verification (needs the production build in `dist/`):
+
+```bash
+npm run build
+npm run verify:csp       # serves dist/ behind the real vercel.json headers (path-to-regexp — the
+                         # same matcher Vercel uses), drives desktop acts, the mobile version and
+                         # each embed, and exits non-zero on any CSP violation, missing header,
+                         # dead WebGL context or empty iframe. SHOTS=1 also writes screenshots.
+npm run grade:headers    # securityheaders.com's ruleset; URL=https://… to score the deployment
+```
+
+`scripts/vercel-headers-server.mjs` also runs standalone (`node scripts/vercel-headers-server.mjs
+4173`, `NO_HEADERS=1` to serve the same build unprotected) — that A/B is how you tell a CSP break
+apart from a pre-existing quirk, e.g. the FBX phone still loading under software WebGL, or the
+`{{ c.img }}` placeholder 404s the dc-runtime fires before it hydrates.
