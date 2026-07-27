@@ -339,6 +339,10 @@
 .embed-section {
   position: relative;
   width: 100%;
+  /* Reserved until the frame reports its real height (EmbeddedPage clears it).
+     Without a reservation an unloaded iframe is 150px tall, which collapsed
+     these sections to the bottom of the page so they never triggered loading. */
+  min-height: 100vh;
 }
 .embed-frame {
   display: block;
@@ -378,5 +382,60 @@
   }
   .nav__links button:not(.nav__cta) {
     display: none;
+  }
+}
+
+/* ---- Scroll reveals ----
+   CSS replacement for the framer-motion variants that used to drive the WhyUs
+   section (opacity / y / scale / blur, staggered). Same easing, same durations,
+   same offsets — useInView toggles `is-in`, the per-card delay is inline.
+   `prefers-reduced-motion` skips straight to the resting state, matching the
+   rest of the site. */
+.reveal {
+  opacity: 0;
+  transform: translateY(64px) scale(0.965);
+  filter: blur(16px);
+  transition:
+    opacity 0.95s var(--ease-out),
+    transform 0.95s var(--ease-out),
+    filter 0.95s var(--ease-out);
+  will-change: opacity, transform, filter;
+}
+.reveal--head {
+  transform: translateY(30px);
+  filter: blur(8px);
+  transition-duration: 0.9s;
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+  filter: blur(0px);
+}
+/* `transition` is a shorthand, so `.reveal` would otherwise wipe the card's own
+   background / border / shadow hover transitions. Restate the full set. */
+.why__card.reveal {
+  transition:
+    opacity 0.95s var(--ease-out),
+    transform 0.95s var(--ease-out),
+    filter 0.95s var(--ease-out),
+    background 0.6s var(--ease-out),
+    border-color 0.6s var(--ease-out),
+    box-shadow 0.6s var(--ease-out);
+}
+/* Reveal finished: drop the compositing hint and hand hover back to the card. */
+.why__card.reveal.is-in {
+  will-change: auto;
+}
+.why__card.reveal.is-in:hover {
+  transform: translateY(-7px);
+  transition-duration: 0.5s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
   }
 }

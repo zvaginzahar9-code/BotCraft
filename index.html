@@ -12,9 +12,100 @@
     <meta property="og:title" content="BotCraft — сайты за дни, а не недели" />
     <meta property="og:description" content="Дорогой минималистичный дизайн и разработка сайтов." />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta name="robots" content="index, follow" />
     <title>BotCraft — сайты за дни, а не недели</title>
+    <!--
+      Boot screen. Both versions render into a single <div id="root">, and the
+      mobile version's entire output is one <iframe> — iframe content does not
+      count toward the parent document's First Contentful Paint, so the top-level
+      document never painted anything and Lighthouse scored it NO_FCP (no FCP,
+      LCP, SI, TBT or TTI at all). Crawlers saw an empty document for the same
+      reason. This paints real branded text from static HTML before any JS runs,
+      then main.jsx fades it out as the app mounts. Inline so it costs no request
+      and blocks nothing; the final design is untouched.
+    -->
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      html,
+      body {
+        margin: 0;
+        background: #000;
+      }
+      #boot {
+        position: fixed;
+        inset: 0;
+        z-index: 300;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        padding: 24px;
+        background: #000;
+        color: #fff;
+        font-family:
+          'Space Grotesk Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+          sans-serif;
+        text-align: center;
+        transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      #boot[hidden] {
+        display: none;
+      }
+      body.app-ready #boot {
+        opacity: 0;
+        pointer-events: none;
+      }
+      #boot .boot__brand {
+        font-size: 1.05rem;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+      #boot h1 {
+        margin: 0;
+        max-width: 18ch;
+        font-size: clamp(1.6rem, 5vw, 2.4rem);
+        font-weight: 500;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+      }
+      #boot p {
+        margin: 0;
+        max-width: 42ch;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: #9a9ba1;
+      }
+      #boot nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        justify-content: center;
+        font-size: 0.9rem;
+      }
+      #boot nav a {
+        color: #9a9ba1;
+        text-decoration: none;
+      }
+    </style>
   </head>
   <body>
+    <div id="boot">
+      <span class="boot__brand">BotCraft</span>
+      <h1>Ваш сайт за дни, а не недели</h1>
+      <p>
+        Студия разработки сайтов BotCraft: дорогой минималистичный дизайн, чистый код и анимации
+        уровня продукта — для десктопа и мобильных устройств.
+      </p>
+      <nav aria-label="Контакты">
+        <a href="https://t.me/Trust7002" rel="noopener noreferrer">Telegram</a>
+        <a href="https://wa.me/77072911123" rel="noopener noreferrer">WhatsApp</a>
+        <a href="mailto:botcraft.kz@gmail.com">botcraft.kz@gmail.com</a>
+      </nav>
+    </div>
     <div id="root"></div>
     <noscript>Для просмотра этого сайта необходимо включить JavaScript.</noscript>
     <script type="module" src="/src/main.jsx"></script>

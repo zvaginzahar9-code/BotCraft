@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# The device screens are self-contained pages embedded in same-origin iframes.
+# They are part of the experience, not standalone destinations — keeping them
+# out of the index avoids them competing with the landing page in search.
+Disallow: /mono-phone/
+Disallow: /embeds/

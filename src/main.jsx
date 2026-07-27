@@ -7,3 +7,14 @@ createRoot(document.getElementById('root')).render(
     <AppRoot />
   </React.StrictMode>,
 );
+
+// Retire the static boot screen (see index.html) once the app owns the pixels.
+// It fades out over the black background both versions already start on, then
+// leaves the DOM so it can never intercept input.
+const boot = document.getElementById('boot');
+if (boot) {
+  requestAnimationFrame(() => {
+    document.body.classList.add('app-ready');
+    setTimeout(() => boot.remove(), 700);
+  });
+}

@@ -15,7 +15,7 @@ Built to an Apple / Linear / Stripe / Vercel / Awwwards level of polish.
 - **@react-three/postprocessing** (subtle, monochrome)
 - **GSAP** + **ScrollTrigger** (scroll story, logo draw via native `stroke-dashoffset`)
 - **Lenis** (smooth scroll, synced to ScrollTrigger)
-- **Framer Motion** (card micro-interactions)
+- CSS transitions + `useInView` for the card reveals (framer-motion was removed — see Performance)
 - **Inter** + **Space Grotesk** (self-hosted via `@fontsource-variable`)
 
 ## Run
@@ -152,3 +152,70 @@ npm run grade:headers    # securityheaders.com's ruleset; URL=https://… to sco
 4173`, `NO_HEADERS=1` to serve the same build unprotected) — that A/B is how you tell a CSP break
 apart from a pre-existing quirk, e.g. the FBX phone still loading under software WebGL, or the
 `{{ c.img }}` placeholder 404s the dc-runtime fires before it hydrates.
+
+## Performance
+
+Measured with headless Edge against `dist/` behind the real `vercel.json` headers
+**with brotli** (`tmp/` harnesses; Lighthouse reports in `tmp/lh/`). Desktop numbers are
+from the **real GPU** (`--use-angle=d3d11`) — under SwiftShader the same page reports
+TBT ~11 s, which is a renderer artefact and will send you chasing ghosts.
+
+| | Desktop before | Desktop after | Mobile before | Mobile after |
+| --- | --- | --- | --- | --- |
+| Lighthouse | 0.57 | **0.60** | **`null` (NO_FCP)** | **0.84** |
+| FCP | 0.9 s | **0.5 s** | never fired | **0.7 s** |
+| LCP | 1.2 s | **0.5 s** | never fired | **0.7 s** |
+| CLS | 0 | 0 | 0 | 0 |
+| Transfer, full journey | 19.05 MB | **2.76 MB** | 3.71 MB | **0.79 MB** |
+
+What moved the numbers, largest first:
+
+- **`mono-phone/site.html` 4.37 MB → 508 KB** (3.21 MB → 334 KB brotli). It carried eight
+  photographs as base64 PNG inside a `<script type="__bundler/manifest">` block — base64
+  defeats compression, and both versions fetch this file. `scripts/optimize-embedded-images.mjs`
+  re-encodes them to WebP at identical pixel dimensions.
+- **`laptop-new.glb` 16.9 MB → 2.48 MB** (12.3 MB → 1.74 MB brotli) via
+  `scripts/optimize-glb.mjs`: textures to WebP, geometry quantized and Meshopt-compressed.
+  **Meshopt, not Draco, is deliberate** — drei's Draco path fetches its decoder from
+  `gstatic.com`, which would mean adding a Google CDN to `script-src`. The Meshopt decoder
+  ships with three-stdlib and runs under the `'wasm-unsafe-eval'` the app CSP already grants,
+  so the asset shrank without touching a single header.
+- **NO_FCP fixed.** The mobile version renders one `<iframe>`, and iframe content does not
+  count toward the parent's FCP — so the top-level document never painted, Lighthouse nulled
+  the whole performance category, and crawlers saw an empty page. `index.html` now paints a
+  static branded boot screen (real `<h1>`, tagline, contact links) before any JS runs;
+  `main.jsx` fades it out as the app mounts. Final design unchanged.
+- **framer-motion removed** — ~100 KB raw for one component. The `motion` chunk went
+  245.85 → 134.11 kB raw (87.13 → 50.79 kB gzip) and its script-eval time 370 → 74 ms.
+  `useInView` + the `.reveal` CSS reproduce the same easing, durations and stagger.
+- **Screen textures to WebP** — `laptop-screen-hi` 1.17 MB → 594 KB (every real-GPU desktop
+  downloads it), `laptop-screen-lo` 253 → 143 KB (mobile's largest initial asset).
+
+Tried and **reverted**: lazy-loading `OrbitControls` via `import('@react-three/drei')`. A
+dynamic import of the barrel cannot be tree-shaken, so the `r3f` chunk went 259 kB → 1,114 kB
+— a 4.3× regression on the critical path to save 15 kB. Kept the static import.
+
+Remaining bottlenecks, in order: desktop TBT ~1.6 s is scene construction and shader
+compilation inside the React commit (inherent to WebGL, run-to-run variance ±160 ms);
+Speed Index ~6 s is the cinematic intro, i.e. the design; the mono-phone frame still pulls
+its own copy of three.js from unpkg (251 KB) alongside the bundled one; `phone.fbx` is still
+2.7 MB and would benefit from the same GLB treatment.
+
+## Cloudflare proxy compatibility
+
+The project is ready for orange-cloud proxying — no code depends on Vercel-specific
+behaviour — but two settings matter once it is on:
+
+- **Turn Rocket Loader OFF.** It defers and reorders scripts, which breaks the dc-runtime
+  documents (`<script type="text/x-dc">`) and the `<script type="importmap">` in
+  `mono-phone/index.html`.
+- **Leave Auto Minify off for HTML.** `site.html` and the other bundled pages carry their
+  assets in a JSON manifest; HTML minification can corrupt it. (Cloudflare retired Auto
+  Minify in 2024, so this only applies to older zones.)
+
+Caching is already declared in `vercel.json` and Cloudflare will honour it: content-hashed
+`/assets/*` is `immutable` for a year, `/models/*` gets a week with
+`stale-while-revalidate`, and every `.html` is `must-revalidate` so deploys propagate
+immediately. Brotli is served by the edge either way. HSTS is set with `preload`, so keep
+Cloudflare's SSL mode on **Full (strict)** — anything less would strip the guarantee the
+header makes.

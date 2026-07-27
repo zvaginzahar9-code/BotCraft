@@ -33,8 +33,8 @@ export default function Macbook({ getOpen, getScroll }) {
   // Pick a texture that fits the GPU's max texture size (tall page ≈ 9305px).
   const texUrl =
     gl.capabilities.maxTextureSize >= 9305
-      ? '/models/laptop-screen-hi.jpg'
-      : '/models/laptop-screen-lo.jpg';
+      ? '/models/laptop-screen-hi.webp'
+      : '/models/laptop-screen-lo.webp';
   const siteTex = useTexture(texUrl);
 
   // Normalise: recentre + uniform scale to NORM_WIDTH.

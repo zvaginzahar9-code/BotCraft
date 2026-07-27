@@ -1,7 +1,5 @@
-import { motion } from 'framer-motion';
+import { useInView } from '../hooks/useInView.js';
 import './sections.css';
-
-const EASE = [0.16, 1, 0.3, 1];
 
 const reasons = [
   {
@@ -29,43 +27,24 @@ const reasons = [
   { n: '06', t: 'Партнёрство', d: 'Не пропадаем после релиза: аналитика, итерации и рост.' },
 ];
 
-const reveal = {
-  hidden: { opacity: 0, y: 64, scale: 0.965, filter: 'blur(16px)' },
-  show: (i) => ({
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    filter: 'blur(0px)',
-    transition: { duration: 0.95, delay: i * 0.09, ease: EASE },
-  }),
-};
-
 export default function WhyUs() {
+  const [headRef, headIn] = useInView({ rootMargin: '-15% 0px' });
+  const [gridRef, cardsIn] = useInView({ rootMargin: '-8% 0px' });
+
   return (
     <section id="why" className="section why">
       <div className="container">
-        <motion.div
-          className="section__head"
-          initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
-          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          viewport={{ once: true, margin: '-15% 0px' }}
-          transition={{ duration: 0.9, ease: EASE }}
-        >
+        <div ref={headRef} className={`section__head reveal reveal--head${headIn ? ' is-in' : ''}`}>
           <p className="eyebrow">Почему выбирают нас</p>
           <h2 className="section__title">Причины работать с&nbsp;BotCraft</h2>
-        </motion.div>
+        </div>
 
-        <div className="why__bento">
+        <div ref={gridRef} className="why__bento">
           {reasons.map((r, i) => (
-            <motion.article
+            <article
               key={r.n}
-              className={`why__card ${r.cls || ''}`}
-              custom={i}
-              variants={reveal}
-              initial="hidden"
-              whileInView="show"
-              whileHover={{ y: -7, transition: { duration: 0.5, ease: EASE } }}
-              viewport={{ once: true, margin: '-8% 0px' }}
+              className={`why__card reveal ${r.cls || ''}${cardsIn ? ' is-in' : ''}`}
+              style={{ transitionDelay: `${i * 90}ms` }}
             >
               <span className="why__glow" aria-hidden />
               <span className="why__num">{r.n}</span>
@@ -79,7 +58,7 @@ export default function WhyUs() {
                   <span className="why__stat-label">{r.statLabel}</span>
                 </div>
               )}
-            </motion.article>
+            </article>
           ))}
         </div>
       </div>
